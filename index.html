@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>MOMO購物網</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+:root{
+  --purple:#7b3ff2;
+  --purple-dark:#5f2bd8;
+  --purple-light:#f3edff;
+  --purple-soft:#faf8ff;
+  --text:#302a3d;
+  --muted:#77717f;
+  --border:#e7def6;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 50% -10%,rgba(123,63,242,.16),transparent 35%),
+    linear-gradient(180deg,#ffffff 0%,#faf8ff 45%,#f2ecff 100%);
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  left:0;
+  top:0;
+  right:0;
+  height:6px;
+  background:linear-gradient(90deg,#9d72fa,#7440e8,#a87cff);
+  z-index:10;
+}
+
+.container{
+  max-width:560px;
+  margin:auto;
+  padding:42px 18px 55px;
+}
+
+.card{
+  background:rgba(255,255,255,.97);
+  border:1px solid rgba(123,63,242,.10);
+  color:var(--text);
+  border-radius:24px;
+  padding:30px 20px 24px;
+  box-shadow:0 18px 48px rgba(68,42,108,.12);
+}
+
+.logo{
+  text-align:center;
+  margin:0 auto 10px;
+  color:#6c35e6;
+  font-size:38px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:2px;
+}
+
+h2{
+  text-align:center;
+  margin:7px 0 5px;
+  color:#3b3050;
+  font-size:24px;
+}
+
+.sub{
+  text-align:center;
+  color:var(--muted);
+  font-size:14px;
+  margin:0 0 25px;
+}
+
+.section-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:0 2px 12px;
+  color:#503d70;
+  font-weight:800;
+  font-size:14px;
+}
+
+.section-title::before{
+  content:"";
+  width:4px;
+  height:17px;
+  border-radius:8px;
+  background:var(--purple);
+}
+
+/* 優惠券 */
+.coupon{
+  position:relative;
+  display:grid;
+  grid-template-columns:128px 1fr;
+  min-height:158px;
+  margin-bottom:18px;
+  overflow:hidden;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:0 10px 28px rgba(73,44,112,.10);
+}
+
+.coupon::before,
+.coupon::after{
+  content:"";
+  position:absolute;
+  left:118px;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:#faf8ff;
+  border:1px solid var(--border);
+  z-index:3;
+}
+
+.coupon::before{top:-11px;}
+.coupon::after{bottom:-11px;}
+
+.coupon-left{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:18px 9px;
+  color:#fff;
+  text-align:center;
+  background:linear-gradient(160deg,#9b6df7 0%,#7139e8 100%);
+}
+
+.coupon-left::after{
+  content:"";
+  position:absolute;
+  top:17px;
+  right:0;
+  bottom:17px;
+  border-right:1px dashed rgba(255,255,255,.55);
+}
+
+.amount-label{
+  font-size:12px;
+  opacity:.92;
+  margin-bottom:4px;
+}
+
+.discount{
+  font-size:35px;
+  line-height:1.08;
+  font-weight:900;
+  word-break:break-word;
+}
+
+.left-note{
+  margin-top:8px;
+  font-size:12px;
+  opacity:.95;
+}
+
+.coupon-right{
+  min-width:0;
+  padding:18px 16px 16px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.coupon-title{
+  color:#342a47;
+  font-size:18px;
+  font-weight:900;
+  line-height:1.4;
+  margin-bottom:7px;
+}
+
+.tag{
+  display:inline-block;
+  width:max-content;
+  max-width:100%;
+  padding:4px 9px;
+  margin-bottom:8px;
+  border-radius:999px;
+  background:var(--purple-light);
+  color:var(--purple-dark);
+  font-size:12px;
+  font-weight:800;
+}
+
+.info{
+  color:#696473;
+  font-size:13px;
+  line-height:1.75;
+}
+
+.coupon-btn{
+  width:100%;
+  padding:11px 12px;
+  margin-top:11px;
+  border:0;
+  border-radius:10px;
+  background:linear-gradient(90deg,#8450ef,#6f35e5);
+  color:#fff;
+  font-size:14px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.coupon-btn:hover{
+  background:linear-gradient(90deg,#7540e8,#612bd8);
+}
+
+.note{
+  margin-top:18px;
+  padding:13px 14px;
+  text-align:center;
+  color:#898391;
+  font-size:12px;
+  line-height:1.7;
+  border:1px solid #eee7fb;
+  border-radius:12px;
+  background:#faf8ff;
+}
+
+/* 彈窗 */
+.modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:999;
+  background:rgba(27,20,40,.60);
+  backdrop-filter:blur(4px);
+}
+
+.modal-box{
+  position:relative;
+  max-width:370px;
+  width:100%;
+  padding:29px 23px 23px;
+  text-align:center;
+  color:var(--text);
+  background:#fff;
+  border-radius:22px;
+  box-shadow:0 22px 60px rgba(24,15,40,.25);
+}
+
+.modal-box h3{
+  margin:0 0 12px;
+  color:#4e2d87;
+  font-size:21px;
+}
+
+.modal-coupon-name{
+  font-size:17px;
+  font-weight:900;
+  color:#5f2bd8;
+  background:#f4efff;
+  padding:12px;
+  border-radius:11px;
+  margin:14px 0;
+}
+
+.modal-box p{
+  margin:0 0 18px;
+  color:#77727f;
+  font-size:14px;
+  line-height:1.75;
+}
+
+.modal-btn{
+  width:100%;
+  padding:15px;
+  border:0;
+  border-radius:12px;
+  background:linear-gradient(90deg,#8450ef,#6f35e5);
+  color:#fff;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.close-btn{
+  margin-top:11px;
+  background:#f0edf5;
+  color:#696370;
+}
+
+.close-btn:hover{
+  background:#e7e1ef;
+}
+
+@media(max-width:430px){
+  .container{
+    padding:30px 12px 40px;
+  }
+
+  .card{
+    padding:25px 14px 20px;
+    border-radius:20px;
+  }
+
+  .coupon{
+    grid-template-columns:112px 1fr;
+  }
+
+  .coupon::before,
+  .coupon::after{
+    left:102px;
+  }
+
+  .discount{
+    font-size:30px;
+  }
+
+  .coupon-right{
+    padding:16px 12px 14px;
+  }
+
+  .coupon-title{
+    font-size:16px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="card">
+
+    <div class="logo">MOMO購物網</div>
+
+    <h2>優惠券領取中心</h2>
+
+    <p class="sub">
+      精選限時優惠・數量有限
+    </p>
+
+    <div class="section-title">
+      本期優惠券
+    </div>
+
+    <!-- 優惠券自動生成 -->
+    <div id="couponList"></div>
+
+    <div class="note">
+      ※ 優惠券實際使用條件與領取資格，請聯絡官方LINE客服。
+    </div>
+
+  </div>
+</div>
+
+
+<!-- 彈窗 -->
+<div class="modal" id="modal">
+
+  <div class="modal-box">
+
+    <h3>優惠券領取</h3>
+
+    <div
+      class="modal-coupon-name"
+      id="selectedCoupon">
+    </div>
+
+    <p>
+      點擊下方按鈕即可前往聯絡活動人員，
+      確認優惠券領取方式與使用資格。
+    </p>
+
+    <button
+      class="modal-btn"
+      onclick="goLine()">
+      前往聯絡優惠券人員
+    </button>
+
+    <button
+      class="modal-btn close-btn"
+      onclick="closeModal()">
+      返回
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   1. 唯一跳轉鏈接
+
+   ★ 以後要換按鈕跳轉網址，只改這裡。
+   ★ 所有優惠券共用同一個網址。
+===================================================== */
+
+const lineUrl =
+"https://line-router-admin.vercel.app/api/r/bbbb";
+
+
+/* =====================================================
+   2. 優惠券管理區
+
+   ★ 你之後主要就是修改這一區。
+   ★ 每一張優惠券的：
+      標題 / 金額 / 使用條件 / 有效期限 / 標籤
+      都可以分開修改。
+===================================================== */
+
+const coupons = [
+
+  {
+    title: "全站購物優惠券",
+
+    /* 左側文字 */
+    amountLabel: "全站通用",
+    discount: "$1888",
+    leftNote: "優惠折價券",
+
+    /* 右側小標籤 */
+    tag: "限時領取",
+
+    /* 使用條件：這裡可以直接自己修改完整文字 */
+    condition: "低消 $100",
+
+    /* 有效期限：這裡可以直接自己修改完整文字 */
+    expire: "即日起至 09.25 23:59",
+
+    /* 按鈕文字也可修改 */
+    buttonText: "立即查看優惠券"
+  },
+
+  {
+    title: "遊戲專區優惠券",
+
+    amountLabel: "最高折抵",
+    discount: "$3888",
+    leftNote: "優惠折價券",
+
+    tag: "限時領取",
+
+    condition: "低消 $0.01",
+
+    expire: "即日起至 09.25 23:59",
+
+    buttonText: "立即查看優惠券"
+  }
+
+];
+
+
+/* =====================================================
+   3. 自動生成優惠券
+
+   下面這些不用修改。
+===================================================== */
+
+function renderCoupons(){
+
+  const couponList =
+    document.getElementById("couponList");
+
+  couponList.innerHTML = "";
+
+  coupons.forEach((coupon,index)=>{
+
+    const div =
+      document.createElement("div");
+
+    div.className = "coupon";
+
+    div.innerHTML = `
+
+      <div class="coupon-left">
+
+        <div class="amount-label">
+          ${coupon.amountLabel}
+        </div>
+
+        <div class="discount">
+          ${coupon.discount}
+        </div>
+
+        <div class="left-note">
+          ${coupon.leftNote}
+        </div>
+
+      </div>
+
+      <div class="coupon-right">
+
+        <div class="coupon-title">
+          ${coupon.title}
+        </div>
+
+        <div class="tag">
+          ${coupon.tag}
+        </div>
+
+        <div class="info">
+          使用條件：${coupon.condition}<br>
+          有效期限：${coupon.expire}
+        </div>
+
+        <button
+          class="coupon-btn"
+          onclick="showModal(${index})">
+          ${coupon.buttonText}
+        </button>
+
+      </div>
+
+    `;
+
+    couponList.appendChild(div);
+
+  });
+
+}
+
+
+/* =====================================================
+   4. 打開彈窗
+===================================================== */
+
+function showModal(index){
+
+  const coupon = coupons[index];
+
+  document.getElementById(
+    "selectedCoupon"
+  ).innerText = coupon.title;
+
+  document.getElementById(
+    "modal"
+  ).style.display = "flex";
+
+}
+
+
+/* =====================================================
+   5. 關閉彈窗
+===================================================== */
+
+function closeModal(){
+
+  document.getElementById(
+    "modal"
+  ).style.display = "none";
+
+}
+
+
+/* =====================================================
+   6. 所有優惠券共用同一個跳轉鏈接
+===================================================== */
+
+function goLine(){
+
+  window.location.href = lineUrl;
+
+}
+
+
+/* =====================================================
+   7. 點黑色背景關閉彈窗
+===================================================== */
+
+document
+.getElementById("modal")
+.addEventListener("click",function(e){
+
+  if(e.target === this){
+    closeModal();
+  }
+
+});
+
+
+/* 啟動頁面 */
+
+renderCoupons();
+
+</script>
+
+</body>
+</html>
